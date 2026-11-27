@@ -9,6 +9,10 @@ updates:
     commit-message:
       prefix: "build(deps)"
       prefix-development: "build(deps-dev)"
+    ignore:
+      # @eslint/js 10 exige eslint 10 (ERESOLVE con eslint 9 y sus plugins).
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: github-actions
