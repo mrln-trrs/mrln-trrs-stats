@@ -2,10 +2,10 @@ name: Test
 on:
   push:
     branches:
-      - master
+      - mrln
   pull_request:
     branches:
-      - master
+      - mrln
 
 permissions: read-all
 
@@ -42,6 +42,3 @@ jobs:
       - name: Run Prettier
         run: |
           npm run format:check
-
-      - name: Code Coverage
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1

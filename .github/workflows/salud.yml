@@ -1,0 +1,33 @@
+name: Salud del despliegue
+
+# Comprueba cada día que la instancia de Vercel devuelve tarjetas válidas.
+# Si falla (token vencido, cuota, despliegue caído), la ejecución queda en rojo
+# y GitHub avisa por correo al dueño del repo.
+on:
+  schedule:
+    - cron: "41 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Comprobar tarjetas en producción
+        run: |
+          base="https://mrln-trrs-stats.vercel.app/api"
+          fallos=0
+          for ruta in "?username=mrln-trrs" "/top-langs/?username=mrln-trrs" "/pin?username=mrln-trrs&repo=mrln-trrs-stats"; do
+            cuerpo=$(curl -sS -m 30 -w '\n%{http_code}' "$base$ruta&cache_seconds=0" || true)
+            codigo=$(tail -n1 <<<"$cuerpo")
+            if [[ "$codigo" != 200 ]] || ! grep -q '<svg' <<<"$cuerpo" || grep -qE 'Something went wrong|Bad credentials|rate limit|Could not resolve' <<<"$cuerpo"; then
+              echo "::error::$ruta → HTTP $codigo o tarjeta de error"
+              fallos=$((fallos+1))
+            else
+              echo "ok $ruta"
+            fi
+          done
+          exit $fallos
