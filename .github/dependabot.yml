@@ -10,8 +10,10 @@ updates:
       prefix: "build(deps)"
       prefix-development: "build(deps-dev)"
     ignore:
-      # @eslint/js 10 exige eslint 10 (ERESOLVE con eslint 9 y sus plugins).
+      # eslint 10 y @eslint/js 10: los plugins y la configuración siguen en eslint 9.
       - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
         update-types: ["version-update:semver-major"]
 
   # Maintain dependencies for GitHub Actions
