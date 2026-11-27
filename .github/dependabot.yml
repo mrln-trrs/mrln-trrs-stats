@@ -9,12 +9,10 @@ updates:
     commit-message:
       prefix: "build(deps)"
       prefix-development: "build(deps-dev)"
-    ignore:
-      # eslint 10 y @eslint/js 10: los plugins y la configuración siguen en eslint 9.
-      - dependency-name: "@eslint/js"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "eslint"
-        update-types: ["version-update:semver-major"]
+    groups:
+      # eslint y @eslint/js deben subir juntos (peer dependency).
+      eslint:
+        patterns: ["eslint", "@eslint/js"]
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: github-actions
